@@ -1,0 +1,11 @@
+{
+  "name": "campionato-pingpong-2024",
+  "version": "1.0.0",
+  "description": "Gestionale del campionato di Ping Pong AS. 2023-2024 IIS Falcone-Righi",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Jane Doe",
+  "license": "MIT"
+}
