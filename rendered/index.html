@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="https://www.iisfalcone-righi.edu.it/portale/wp-content/uploads/2018/12/cropped-logoIISFRtondo600-1-192x192.png">
+    <title>Gestionale Campionato Ping Pong</title>
+    <script src="./app.js" defer></script>
+</head>
+<body class="bg">
+    
+    <div class="SezInputGiocatori">
+        <div style="display: none;">
+
+            <p>
+                Inserire il nome dei giocatori separati da una ,
+            </p>
+
+            <textarea class="giocatoriInput" name="giocatori" id="giocatoriInput" onkeypress="return /[0-9,. ]/gm.test(event.key)" cols="45" rows="10"></textarea>
+
+            <button title="Calcola partite" onclick="try{document.getElementById('errorMessage').innerHTML='';PartiteDaGiocare(document.getElementById('giocatoriInput').value)}catch(error){document.getElementById('errorMessage').innerHTML ='* '+error.message}">
+                Calcola partite
+            </button>
+
+            
+
+        </div>
+        <div>
+            <p> Inserisci il numero giocatori </p>
+            <input type="number" name="QuickAdd" id="QuickAdd">
+            <button onclick="QuickAdd(1, document.getElementById('QuickAdd').value)"> Inserisci </button>
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+
+    <div class="partite">
+        <div>
+            <div id="tabs">
+
+                <button onclick="AddToList(scontri.daGiocare)">
+                    Da giocare
+                </button>
+
+                <button onclick="AddToList(scontri.Giocate)">
+                    Giocate
+                </button>
+
+            </div>
+            <div>
+                <div id="partite"> </div>
+
+                <div id="editMatch">
+                    <div>
+                        <input id="giocatore1Inp" type="text" readonly>
+                        <input id="giocatore2Inp" type="text" readonly>
+                    </div>
+                    <div>
+                        <button id="giocatore1Btn" class="normal" onmouseover="vinceAnimBtn(1, 2)" onmouseout="normAnimBtn()" onclick="vinceBtn(1, 2)">Vince</button>
+                        <button id="giocatore2Btn" class="normal" onmouseover="vinceAnimBtn(2, 1)" onmouseout="normAnimBtn()" onclick="vinceBtn(2, 1)">Vince</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="diagram">
+        <div>
+            <div>
+                <div id="ColonnaDaGiocare" title="0"></div>
+                <div id="ColonnaGiocate" title="0"></div>
+            </div>
+            <div style="height: fit-content; border-top: 1px solid #000; margin-top: 5px;">
+                <p>Da giocare</p>
+                <p>Giocate</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="reset">
+        <div>
+            <p>Il pulsante "Reset" fa ripristinare l'evento azzerando giocatori, partite da giocare o partite già giocate.</p>
+            <p style="color: var(--error);">* Questa azione è irreversibile</p>
+            <button onclick="openPopup();">Reset</button>
+        </div>
+    </div>
+
+    <div style="z-index: -99;"></div>
+
+    <div>
+        <div id="Classifica"> </div>
+    </div>
+</body>
+</html>

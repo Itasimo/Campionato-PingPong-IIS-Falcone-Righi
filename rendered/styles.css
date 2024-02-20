@@ -1,0 +1,393 @@
+:root{
+    --bg1: #e5ebff;
+    --bg2: #e2e2e2;
+    --button1: #73BEE0;
+    --button2: #0090C1;
+    --button_hov: #5EC1D9;
+    --text: #fff;
+    --error: #ff3333;
+}
+
+
+*{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+p{
+    font-family: sans-serif;
+}
+
+body{
+    margin: 0;
+    height: 100vh;
+    display: grid;
+    justify-content: start;
+    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-rows: 70%;
+}
+
+.bg{
+    background: var(--bg1); /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, var(--bg1), var(--bg2), var(--bg1)); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, var(--bg1), var(--bg2), var(--bg1)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    animation: grad-anim 10s linear infinite;
+}
+
+@keyframes grad-anim {
+    from {
+        background-position: 0;
+    }
+    to {
+        background-position: 100vw;
+    }
+}
+
+body>div>div{
+    width: fit-content;
+    height: fit-content;
+    padding: 20px;
+    border: #000 solid 1px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+body>div{
+    padding-left: 30px;
+    padding-top: 30px;;
+}
+
+
+
+/* Selezione Input Giocatori - Deplicated */
+
+.giocatoriInput{
+    resize: none;
+}
+
+
+.SezInputGiocatori{
+    height: fit-content;
+    width: fit-content;;
+}
+
+
+.SezInputGiocatori>div>input{
+    padding: 5px;
+    margin-bottom: 20px;
+    border: #000 solid 1px;
+    border-radius: 5px;
+}
+
+.SezInputGiocatori>div>p{
+    width: 25vw;
+    margin: 0;
+    padding-bottom: 15px;
+}
+
+.SezInputGiocatori>div>p#errorMessage{
+    padding: 0;
+    padding-top: 20px;
+    color: var(--error);
+}
+.SezInputGiocatori>div>p#errorMessage:empty{
+    padding: 0;
+}
+
+.SezInputGiocatori>div>button{
+    padding: 10px;
+    margin-top: 20px;
+    background: var(--button1);
+    border: var(--button2) solid 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--text);
+    font-weight: bold;
+}
+
+.SezInputGiocatori>div>button:hover{
+    background: var(--button_hov);
+}
+
+
+
+
+/* Lista Partite */
+
+.partite>div>div{
+    display: flex;
+}
+
+.partite>div>div#tabs{
+    justify-content: flex-start;
+}
+
+.partite>div>div#tabs>button, .reset>div>button, .popup>button{
+    font-size: 1rem;
+    margin: 0;
+    border: #000 solid 1px;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.partite>div>div#tabs>button:hover, .popup>button:hover{
+    background-color: #000;
+    color: var(--bg1);
+}
+
+.partite>div>div#tabs>button:not(:last-child){
+    margin-right: 15px;
+}
+
+.partite>div>div>div{
+    margin-top: 10px;
+    border: #000 solid 1px;
+    padding: 5px;
+    border-radius: 5px;
+    overflow: auto;
+    height: 77vh;
+}
+
+/* width */
+.partite>div>div>div::-webkit-scrollbar {
+    width: 5px;
+}
+   
+/* Handle */
+.partite>div>div>div::-webkit-scrollbar-thumb {
+    background: var(--button1);
+    border-radius: 100px;
+}
+  
+/* Handle on hover */
+.partite>div>div>div::-webkit-scrollbar-thumb:hover {
+    background: var(--button_hov);
+}
+
+.partite>div>div>div>p{
+    margin: 0;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.partite>div>div>div>p:hover{
+    background: var(--button_hov);
+    border-radius: 5px;
+}
+
+.partite>div>div>div>p:first-child{
+    margin-top: 0;
+}
+
+.partite>div>div>div>p:last-child{
+    margin-bottom: 0;
+}
+
+.partite>div>div>div:not(div#editMatch){
+    width: 150px;
+}
+
+.partite>div>div>div#editMatch{
+    margin-left: 5px;
+}
+
+.partite>div>div>div#editMatch>div{
+    display: flex;
+}
+
+.partite>div>div>div#editMatch>div>input{
+    width: 100px;
+}
+
+.partite>div>div>div#editMatch>div>button{
+    margin: auto;
+    margin-top: 10px;
+    width: 50px;
+    border: transparent solid 1px;
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.partite>div>div>div#editMatch>div>button.normal{
+    background-color: var(--button2);
+}
+
+.partite>div>div>div#editMatch>div>button.winner{
+    background-color: #00681c;
+}
+
+.partite>div>div>div#editMatch>div>button.loser{
+    background-color: #d80000;
+}
+
+
+
+
+
+/* Reset Button and Reset Popup */
+
+.reset{
+    padding-bottom: 30px;
+}
+
+.reset>div{
+    width: 90%;
+    height: 71.5%;
+}
+
+.reset>div>p{
+    margin: 0;
+    margin-bottom: auto;
+}
+
+.reset>div>button:hover, .popup>button#reset:hover{
+    background-color: var(--error);
+    border-color: var(--error);
+    color: var(--bg1);
+}
+
+
+.block{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    z-index: 50;
+}
+
+.popup{
+    position: absolute;
+    z-index: 51;
+    justify-self: center;
+    align-self: center;
+    padding: 20px;
+    background-color: var(--button1);
+    border: 1px solid var(--button2);
+    border-radius: 20px;
+}
+
+.popup>button{
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+.popup>button#reset{
+    float: right;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+
+
+
+/* Diagram */
+
+.diagram>div{
+    width: 84%;
+    height: 90%;
+}
+
+.diagram>div>div{
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.diagram>div>div>div{
+    width: 80px;
+    background-color: var(--button1);
+    margin-top: auto;
+    border-radius: 5px;
+}
+
+.diagram>div>div>div{
+    margin-left: 25px;
+}
+
+.diagram>div>div>div:last-child{
+    margin-left: auto;
+    margin-right: 18px;
+}
+
+.diagram>div>div>p{
+    margin: 30px;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.diagram>div>div>p:last-child{
+    margin-left: auto;
+}
+
+
+
+
+
+
+/* Classifica */
+
+
+#Classifica{
+    width: 90%;
+    overflow: auto;
+    height: 150px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* width */
+#Classifica::-webkit-scrollbar {
+    width: 5px;
+}
+   
+/* Handle */
+#Classifica::-webkit-scrollbar-thumb {
+    background: var(--button1);
+    border-radius: 100px;
+}
+  
+/* Handle on hover */
+#Classifica::-webkit-scrollbar-thumb:hover {
+    background: var(--button_hov);
+}
+
+#Classifica>div{
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#Classifica>div:hover{
+    background: var(--button_hov);
+    border-radius: 5px;
+}
+
+#Classifica>div:hover:nth-child(1){
+    background: #d8a900 !important;
+}
+#Classifica>div:hover:nth-child(2){
+    background: #a5a5a5 !important;
+}
+#Classifica>div:hover:nth-child(3){
+    background: #b36b00 !important;
+}
+
+#Classifica>div>p{
+    margin: 0;
+}
+
+#Classifica>div>p:first-child{
+    margin-right: auto;
+}
