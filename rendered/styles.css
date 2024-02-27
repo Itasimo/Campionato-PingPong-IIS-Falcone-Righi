@@ -99,13 +99,13 @@ body>div{
     justify-content: center;
 }
 
-.SavingSetup>button::after{
+.SavingSetup>button.dropbtn::after{
     content: "►";
     margin-left: 5px;
     rotate: 90deg;
 }
 
-.SavingSetup:has(div#DropClasse.show)>button::after{
+.SavingSetup:has(div#DropClasse.show)>button.dropbtn::after{
     content: "►";
     margin-left: 5px;
     rotate: 0deg !important;
@@ -137,6 +137,8 @@ body>div{
     max-width: 328px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+    max-height: 90%;
+    overflow: auto;
 }
   
 .dropdown-content a {
@@ -253,18 +255,18 @@ body>div{
 }
 
 /* width */
-.partite>div>div>div::-webkit-scrollbar {
+.partite>div>div>div::-webkit-scrollbar, .dropdown-content.show::-webkit-scrollbar {
     width: 5px;
 }
    
 /* Handle */
-.partite>div>div>div::-webkit-scrollbar-thumb {
+.partite>div>div>div::-webkit-scrollbar-thumb, .dropdown-content.show::-webkit-scrollbar-thumb {
     background: var(--button1);
     border-radius: 100px;
 }
   
 /* Handle on hover */
-.partite>div>div>div::-webkit-scrollbar-thumb:hover {
+.partite>div>div>div::-webkit-scrollbar-thumb:hover, .dropdown-content.show::-webkit-scrollbar-thumb:hover {
     background: var(--button_hov);
 }
 

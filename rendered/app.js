@@ -16,7 +16,7 @@ const popup = {
     AddClasse: `
     <div class="popup">
         <p>Inserire il nome della nuova classe</p>
-        <input id="ClasseName" type="text" placeholder="Nome Classe">
+        <input id="ClasseName" type="text" placeholder="Nome Classe" onclick="document.getElementById('ClasseName').style.border = '1px solid black'">
         <br>
         <button onclick="closePopup()">Annulla</button>
         <button onclick="AddClasse();">Aggiungi</button>
@@ -36,7 +36,9 @@ async function LoadClasse(Classe) {
     document.getElementsByTagName('title')[0].innerHTML = 'Gestionale Campionati IIS Falcone-Righi - ' + Classe
     document.getElementById('giocatoriInput').value = data.Raw
 
-    if (data.Raw != '') {document.getElementById('QuickAdd').value = data.Raw.split(',').length} else {document.getElementById('QuickAdd').value = ''}
+
+    if ( data.Raw != '' ) { document.getElementById('QuickAdd').value = data.Raw.split(',').length } else { document.getElementById('QuickAdd').value = '' }
+
     if ( data.daGiocare.length != 0) { scontri.daGiocare = data.daGiocare } else { scontri.daGiocare = [] }
     if ( data.Giocate.length   != 0) { scontri.Giocate   = data.Giocate   } else { scontri.Giocate   = [] }
 
@@ -80,16 +82,15 @@ function PartiteDaGiocare(data) {
     data = data.replaceAll(' ', '').split(',').filter(Boolean).sort(collator.compare)
 
     if (data.length <= 1) {throw new Error("Inserire il numero di giocatori")}
+    if (document.getElementById('classeTitle').innerHTML == '') {throw new Error("Seleziona prima una classe")}
 
     for (let giocatore1 = 0; giocatore1 < data.length; giocatore1++) {
         for (let giocatore2 = 0; giocatore2 < data.length; giocatore2++) {
 
 
-
             if (data[giocatore1].split('').includes('\uDFC6') || data[giocatore2].split('').includes('\uDFC6')) {throw new Error("Il nome non può contere 🏆")}
 
 
-UpadteStorage
             let isPresent1 = scontri.daGiocare.includes(data[giocatore1] + ' vs ' + data[giocatore2]) || scontri.daGiocare.includes(data[giocatore2] + ' vs ' + data[giocatore1])
             let isPresent2 = scontri.Giocate.includes('🏆‎' + data[giocatore1] + ' vs ' + data[giocatore2]) || scontri.Giocate.includes('🏆‎' + data[giocatore2] + ' vs ' + data[giocatore1]) || scontri.Giocate.includes(data[giocatore1] + ' vs 🏆‎ ' + data[giocatore2]) || scontri.Giocate.includes(data[giocatore2] + ' vs 🏆‎ ' + data[giocatore1])
 
@@ -269,23 +270,27 @@ function UpadteStorage() {
     var ScontridaGiocareRaw = []
     var ScontriGiocate = scontri.Giocate
 
+    // Solo per la lista di giocatori completa
+
     for (let i = 0; i < scontri.daGiocare.length; i++) {
 
-        ScontridaGiocareRaw.push(scontri.daGiocare[i].split(' ')[0])
-        ScontridaGiocareRaw.push(scontri.daGiocare[i].split(' ')[2])
+        ScontridaGiocareRaw.push(scontri.daGiocare[i].split(' ')[0]) // Giocatore 1
+        ScontridaGiocareRaw.push(scontri.daGiocare[i].split(' ')[2]) // Giocatore 2
 
     }
 
-    ScontridaGiocareRaw = removeDuplicates(ScontridaGiocareRaw)
+    ScontridaGiocareRaw = removeDuplicates(ScontridaGiocareRaw) // Prende i nomi unici solo di quelli che devono giocare
 
     for (let i = 0; i < scontri.Giocate.length; i++) {
 
-        ScontridaGiocareRaw.push(scontri.Giocate[i].split(' ')[0])
-        ScontridaGiocareRaw.push(scontri.Giocate[i].split(' ')[2])
+        ScontridaGiocareRaw.push(scontri.Giocate[i].split(' ')[0]) // Giocatore 1
+        ScontridaGiocareRaw.push(scontri.Giocate[i].split(' ')[2]) // Giocatore 2
 
     }
 
-    ScontridaGiocareRaw = removeDuplicates(removeDuplicates(ScontridaGiocareRaw).join(',').replaceAll('🏆‎','').split(',')).filter(Boolean).sort(collator.compare).join(',')
+    // È un obrobrio ma funziona
+    // TODO?: cercare di migliorare la leggibilità
+    ScontridaGiocareRaw = removeDuplicates(removeDuplicates(ScontridaGiocareRaw).join(',').replaceAll('🏆‎','').split(',')).filter(Boolean).sort(collator.compare).join(',') // Rimuove la coppa e prende i nomi unici dei giocatori inculsi quelli che hanno già giocato e infine separa tutti i nomi con una ,
 
     data = {
         daGiocare: ScontridaGiocare.filter(Boolean),
@@ -293,7 +298,7 @@ function UpadteStorage() {
         Raw: ScontridaGiocareRaw
     }
 
-    SaveData(document.getElementById('classeTitle').innerHTML , JSON.stringify(data))
+    SaveData(document.getElementById('classeTitle').innerHTML , JSON.stringify(data)) // Salva i dati nel file
 }
 
 
@@ -320,9 +325,9 @@ function UpadteDiagram() {
 // Reset
 
 function ResetEvento() {
-    localStorage.clear()
     scontri.daGiocare = []
     scontri.Giocate = []
+    UpadteStorage()
 }
 
 function openPopup(type) {
@@ -332,7 +337,7 @@ function openPopup(type) {
 function closePopup() {
     document.getElementsByClassName('block')[0].remove()
     document.getElementsByClassName('popup')[0].remove()
-    SetAtLunch()
+    LoadClasse(document.getElementById('classeTitle').innerHTML)
 }
 
 
@@ -427,14 +432,17 @@ function MostDupliacte(arr){
 
 // Saving setup
 
-function AddClasse() {
+async function AddClasse() {
     var ClasseName = document.getElementById('ClasseName').value
 
-    if (ClasseName == '') {
+    let classiOrig = await fs.readdir(__dirname + "/classi")
+    let classi = []
+    classiOrig.forEach(function(e,i){classi.push(e.slice(0, classiOrig[i].length - 5))}) // Remove .json
+
+    if (ClasseName == '' || classi.includes(ClasseName)) {
+        document.getElementById('ClasseName').style.border = '1px solid red'
         return
     }
-
-    console.log(ClasseName);
 
     const newClasse = {
         daGiocare: [],
@@ -445,6 +453,7 @@ function AddClasse() {
     SaveData(ClasseName, JSON.stringify(newClasse))
 
     document.getElementById('DropClasse').innerHTML += '<a onclick="LoadClasse(\'' + ClasseName + '\'); ToogleDropdown()">' + ClasseName + '</a>'
+    LoadClasse(ClasseName)
 
     closePopup()
 }
@@ -457,7 +466,7 @@ async function AddToDropDown() {
 
     let classiOrig = await fs.readdir(__dirname + "/classi")
     let classi = []
-    classiOrig.forEach(function(e,i){classi.push(e.slice(0, classiOrig[i].length - 5))})
+    classiOrig.forEach(function(e,i){classi.push(e.slice(0, classiOrig[i].length - 5))}) // Remove .json
 
     document.getElementById('DropClasse').innerHTML = ''
 
@@ -472,7 +481,6 @@ function SaveData(ClasseName, data) {
 
     fs.writeFile('rendered\\classi\\' + ClasseName + '.json', data, (err) => {
         if (err) throw err;
-        console.log('Data written to file');
     });
 }
 

@@ -12,7 +12,8 @@ const createWindow = () => {
     resizable: false,
     icon: 'https://www.iisfalcone-righi.edu.it/portale/wp-content/uploads/2018/12/cropped-logoIISFRtondo600-1-192x192.png',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true,
+      contextIsolation: false
     }
   })
 
