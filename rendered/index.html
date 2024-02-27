@@ -5,10 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="https://www.iisfalcone-righi.edu.it/portale/wp-content/uploads/2018/12/cropped-logoIISFRtondo600-1-192x192.png">
-    <title>Gestionale Campionato Ping Pong</title>
+    <title>Gestionale Campionati IIS Falcone-Righi</title>
     <script src="./app.js" defer></script>
 </head>
 <body class="bg">
+
+    <div class="SavingSetup">
+        <button onclick="openPopup('AddClasse')">
+            <span>+</span>
+            <span>Aggiungi classe</span>
+        </button>
+    </div>
+
+    <div class="classeTitle">
+        <h2 id="classeTitle"> </h2>
+    </div>
+
+    <div class="SavingSetup">
+        <button onclick="ToogleDropdown()" class="dropbtn">Seleziona la classe</button>
+        <div id="DropClasse" class="dropdown-content">
+        </div>
+      </div>
     
     <div class="SezInputGiocatori">
         <div style="display: none;">
@@ -33,7 +50,6 @@
             <p id="errorMessage"></p>
         </div>
     </div>
-
 
     <div class="partite">
         <div>
@@ -65,6 +81,7 @@
         </div>
     </div>
 
+
     <div class="diagram">
         <div>
             <div>
@@ -82,7 +99,7 @@
         <div>
             <p>Il pulsante "Reset" fa ripristinare l'evento azzerando giocatori, partite da giocare o partite già giocate.</p>
             <p style="color: var(--error);">* Questa azione è irreversibile</p>
-            <button onclick="openPopup();">Reset</button>
+            <button onclick="openPopup('reset');">Reset</button>
         </div>
     </div>
 

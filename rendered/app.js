@@ -1,18 +1,44 @@
+const fs = require("fs").promises;
+
 let scontri = {
     daGiocare: [],
     Giocate: []
 }
+
+const popup = {
+    reset: `
+    <div class="popup">
+        <p><b>Questa azione è irreversibile</b>, sei certo/a di voler ripristinare l'evento?</p>
+        <button onclick="closePopup()">Annulla</button>
+        <button id="reset" onclick="ResetEvento(); location.reload();">Reset</button>
+    </div>
+    `,
+    AddClasse: `
+    <div class="popup">
+        <p>Inserire il nome della nuova classe</p>
+        <input id="ClasseName" type="text" placeholder="Nome Classe">
+        <br>
+        <button onclick="closePopup()">Annulla</button>
+        <button onclick="AddClasse();">Aggiungi</button>
+    </div>
+    `
+}
 var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 
+AddToDropDown()
 
-SetAtLunch()
-function SetAtLunch() {
-    document.getElementById('giocatoriInput').value = localStorage.getItem('Raw')
-    document.getElementById('QuickAdd').value = localStorage.getItem('Raw').split(',').length
+async function LoadClasse(Classe) {
 
-    if ( localStorage.getItem('daGiocare') != '' ) { scontri.daGiocare = localStorage.getItem('daGiocare').split(',') } else { scontri.daGiocare = [] }
-    if ( localStorage.getItem('Giocate')   != '' ) { scontri.Giocate   = localStorage.getItem('Giocate').split(',')   } else { scontri.Giocate   = [] }
+    const data = await LoadData(Classe)
+
+    document.getElementById('classeTitle').innerHTML = Classe
+    document.getElementsByTagName('title')[0].innerHTML = 'Gestionale Campionati IIS Falcone-Righi - ' + Classe
+    document.getElementById('giocatoriInput').value = data.Raw
+
+    if (data.Raw != '') {document.getElementById('QuickAdd').value = data.Raw.split(',').length} else {document.getElementById('QuickAdd').value = ''}
+    if ( data.daGiocare.length != 0) { scontri.daGiocare = data.daGiocare } else { scontri.daGiocare = [] }
+    if ( data.Giocate.length   != 0) { scontri.Giocate   = data.Giocate   } else { scontri.Giocate   = [] }
 
     AddToList(scontri.daGiocare)
     Classifica(scontri.Giocate)
@@ -39,7 +65,7 @@ function QuickAdd(start, players) {
         document.getElementById('errorMessage').innerHTML='';
         PartiteDaGiocare(document.getElementById('giocatoriInput').value)
     }catch(error){
-        document.getElementById('errorMessage').innerHTML ='* '+error.message
+        document.getElementById('errorMessage').innerHTML ='* '+ error.message
     }
 }
 
@@ -53,7 +79,7 @@ function PartiteDaGiocare(data) {
 
     data = data.replaceAll(' ', '').split(',').filter(Boolean).sort(collator.compare)
 
-    if (data.length <= 1) {throw new Error("Inserire almeno 2 nomi")}
+    if (data.length <= 1) {throw new Error("Inserire il numero di giocatori")}
 
     for (let giocatore1 = 0; giocatore1 < data.length; giocatore1++) {
         for (let giocatore2 = 0; giocatore2 < data.length; giocatore2++) {
@@ -63,7 +89,7 @@ function PartiteDaGiocare(data) {
             if (data[giocatore1].split('').includes('\uDFC6') || data[giocatore2].split('').includes('\uDFC6')) {throw new Error("Il nome non può contere 🏆")}
 
 
-
+UpadteStorage
             let isPresent1 = scontri.daGiocare.includes(data[giocatore1] + ' vs ' + data[giocatore2]) || scontri.daGiocare.includes(data[giocatore2] + ' vs ' + data[giocatore1])
             let isPresent2 = scontri.Giocate.includes('🏆‎' + data[giocatore1] + ' vs ' + data[giocatore2]) || scontri.Giocate.includes('🏆‎' + data[giocatore2] + ' vs ' + data[giocatore1]) || scontri.Giocate.includes(data[giocatore1] + ' vs 🏆‎ ' + data[giocatore2]) || scontri.Giocate.includes(data[giocatore2] + ' vs 🏆‎ ' + data[giocatore1])
 
@@ -78,7 +104,7 @@ function PartiteDaGiocare(data) {
 
 
     AddToList(scontri.daGiocare)
-    UpadteLocalStorage(data)
+    UpadteStorage(data)
     UpadteDiagram()
 }
 
@@ -213,7 +239,7 @@ function vinceBtn(vince, perde) {
     scontri.daGiocare = scontri.daGiocare.filter(Boolean)
 
     AddToList(scontri.daGiocare)
-    UpadteLocalStorage()
+    UpadteStorage()
     UpadteDiagram()
     Classifica(scontri.Giocate)
 
@@ -237,8 +263,7 @@ function removeDuplicates(arr) {
         index) => arr.indexOf(item) === index);
 }
 
-
-function UpadteLocalStorage() {
+function UpadteStorage() {
 
     var ScontridaGiocare = scontri.daGiocare
     var ScontridaGiocareRaw = []
@@ -262,10 +287,13 @@ function UpadteLocalStorage() {
 
     ScontridaGiocareRaw = removeDuplicates(removeDuplicates(ScontridaGiocareRaw).join(',').replaceAll('🏆‎','').split(',')).filter(Boolean).sort(collator.compare).join(',')
 
-    localStorage.daGiocare = ScontridaGiocare.filter(Boolean)
-    localStorage.Giocate = ScontriGiocate.filter(Boolean)
-    localStorage.Raw = ScontridaGiocareRaw
+    data = {
+        daGiocare: ScontridaGiocare.filter(Boolean),
+        Giocate: ScontriGiocate.filter(Boolean),
+        Raw: ScontridaGiocareRaw
+    }
 
+    SaveData(document.getElementById('classeTitle').innerHTML , JSON.stringify(data))
 }
 
 
@@ -297,17 +325,8 @@ function ResetEvento() {
     scontri.Giocate = []
 }
 
-function openPopup() {
-    var popup = 
-    `
-    <div class="block" onclick="closePopup()"></div>
-        <div class="popup">
-        <p><b>Questa azione è irreversibile</b>, sei certo/a di voler ripristinare l'evento?</p>
-        <button onclick="closePopup()">Annulla</button>
-        <button id="reset" onclick="ResetEvento(); location.reload();">Reset</button>
-    </div>
-    `
-    document.body.innerHTML += popup
+function openPopup(type) {
+    document.body.innerHTML += '<div class="block" onclick="closePopup()"></div>' + popup[type]
 }
 
 function closePopup() {
@@ -402,4 +421,67 @@ function MostDupliacte(arr){
           arr.filter(v => v===a).length
         - arr.filter(v => v===b).length
     ).pop()
+}
+
+
+
+// Saving setup
+
+function AddClasse() {
+    var ClasseName = document.getElementById('ClasseName').value
+
+    if (ClasseName == '') {
+        return
+    }
+
+    console.log(ClasseName);
+
+    const newClasse = {
+        daGiocare: [],
+        Giocate: [],
+        Raw: ''
+    }
+
+    SaveData(ClasseName, JSON.stringify(newClasse))
+
+    document.getElementById('DropClasse').innerHTML += '<a onclick="LoadClasse(\'' + ClasseName + '\'); ToogleDropdown()">' + ClasseName + '</a>'
+
+    closePopup()
+}
+
+function ToogleDropdown() {
+    document.getElementById("DropClasse").classList.toggle("show");  
+}
+
+async function AddToDropDown() {
+
+    let classiOrig = await fs.readdir(__dirname + "/classi")
+    let classi = []
+    classiOrig.forEach(function(e,i){classi.push(e.slice(0, classiOrig[i].length - 5))})
+
+    document.getElementById('DropClasse').innerHTML = ''
+
+    for (let i = 0; i < classi.length; i++) {
+        document.getElementById('DropClasse').innerHTML += '<a onclick="LoadClasse(\'' + classi[i] + '\'); ToogleDropdown()">' + classi[i] + '</a>'
+    }
+
+}
+
+
+function SaveData(ClasseName, data) {
+
+    fs.writeFile('rendered\\classi\\' + ClasseName + '.json', data, (err) => {
+        if (err) throw err;
+        console.log('Data written to file');
+    });
+}
+
+async function LoadData(ClasseName) {
+
+    try {
+        const result = await fs.readFile(__dirname + '\\classi\\' + ClasseName + '.json', 'utf8');
+        return JSON.parse(result)
+     } catch(e) {
+        console.error(e);
+     }
 }

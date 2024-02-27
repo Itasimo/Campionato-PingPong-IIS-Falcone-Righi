@@ -19,7 +19,7 @@
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-p{
+p, a, h2{
     font-family: sans-serif;
 }
 
@@ -29,7 +29,7 @@ body{
     display: grid;
     justify-content: start;
     grid-template-columns: 1fr 1fr 2fr;
-    grid-template-rows: 70%;
+    grid-template-rows: 40px 60%;
 }
 
 .bg{
@@ -64,7 +64,98 @@ body>div{
     padding-top: 30px;;
 }
 
+.classeTitle{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
 
+
+
+/* Saving setup Gestionale */
+
+.SavingSetup{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.SavingSetup>button{
+    display: flex;
+    background: var(--button1);
+    border: var(--button2) solid 1px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--text);
+    margin: auto;
+    width: 50%;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.SavingSetup>button::after{
+    content: "►";
+    margin-left: 5px;
+    rotate: 90deg;
+}
+
+.SavingSetup:has(div#DropClasse.show)>button::after{
+    content: "►";
+    margin-left: 5px;
+    rotate: 0deg !important;
+}
+
+.SavingSetup>button:hover{
+    background: var(--button_hov);
+}
+
+.SavingSetup>button>span{
+    color: var(--button2);
+    font-size: 30px;
+}
+
+.SavingSetup>button>span:last-child {
+    color: var(--text);
+    font-size: 15px;
+    margin-left: 10px;
+}
+
+.dropdown-content {
+    padding: 0;
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 73%;
+    background-color: var(--bg1);
+    min-width: 160px;
+    max-width: 328px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+  
+.dropdown-content a {
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dropdown-content a:hover {
+    border-radius: 10px;
+    background-color: #dae0f5;
+}
+
+  
+.show {display: block;}
 
 /* Selezione Input Giocatori - Deplicated */
 
@@ -79,7 +170,7 @@ body>div{
 }
 
 
-.SezInputGiocatori>div>input{
+.SezInputGiocatori>div>input, #ClasseName{
     padding: 5px;
     margin-bottom: 20px;
     border: #000 solid 1px;
@@ -120,6 +211,10 @@ body>div{
 
 
 /* Lista Partite */
+
+.partite{
+    padding-top: 0px;
+}
 
 .partite>div>div{
     display: flex;
