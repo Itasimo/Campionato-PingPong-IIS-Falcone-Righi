@@ -471,6 +471,8 @@ async function AddToDropDown() {
     document.getElementById('DropClasse').innerHTML = ''
 
     for (let i = 0; i < classi.length; i++) {
+	console.log(classi[i])
+	if (classi[i] == '.DS_') {continue;}
         document.getElementById('DropClasse').innerHTML += '<a onclick="LoadClasse(\'' + classi[i] + '\'); ToogleDropdown()">' + classi[i] + '</a>'
     }
 
@@ -479,7 +481,7 @@ async function AddToDropDown() {
 
 function SaveData(ClasseName, data) {
 
-    fs.writeFile('rendered\\classi\\' + ClasseName + '.json', data, (err) => {
+    fs.writeFile('./rendered/classi/' + ClasseName + '.json', data, (err) => {
         if (err) throw err;
     });
 }
@@ -487,7 +489,7 @@ function SaveData(ClasseName, data) {
 async function LoadData(ClasseName) {
 
     try {
-        const result = await fs.readFile(__dirname + '\\classi\\' + ClasseName + '.json', 'utf8');
+        const result = await fs.readFile(__dirname + '/classi/' + ClasseName + '.json', 'utf8');
         return JSON.parse(result)
      } catch(e) {
         console.error(e);
